@@ -7,11 +7,11 @@ import (
 
 func TestGetAPIKey(t *testing.T) {
 	tests := []struct {
-		name           string
-		authHeader     string
-		expectedKey    string
-		expectedError  error
-		shouldError    bool
+		name          string
+		authHeader    string
+		expectedKey   string
+		expectedError error
+		shouldError   bool
 	}{
 		{
 			name:          "Valid API key",
@@ -88,12 +88,12 @@ func TestGetAPIKey(t *testing.T) {
 					t.Errorf("Expected an error but got none")
 					return
 				}
-				
+
 				// Check for specific error
 				if tt.expectedError != nil && err != tt.expectedError {
 					t.Errorf("Expected error %v, got %v", tt.expectedError, err)
 				}
-				
+
 				// For malformed header errors, check the error message
 				if tt.expectedError == nil && err.Error() != "malformed authorization header" {
 					t.Errorf("Expected 'malformed authorization header' error, got %v", err)
@@ -117,7 +117,7 @@ func TestGetAPIKey_CaseInsensitiveHeader(t *testing.T) {
 	// Test that the function works with different cases of Authorization header
 	testCases := []string{
 		"authorization",
-		"Authorization", 
+		"Authorization",
 		"AUTHORIZATION",
 	}
 
