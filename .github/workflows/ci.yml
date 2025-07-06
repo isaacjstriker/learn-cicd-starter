@@ -36,7 +36,7 @@ jobs:
 
       - name: Check Go code format
         run: |
-          if [ "$(go fmt ./...)" ]; then
+          if [ "test -z $(go fmt ./...)" ]; then
             echo "Go code is not formatted properly"
             exit 1
           fi
