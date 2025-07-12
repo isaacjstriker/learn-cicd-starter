@@ -24,20 +24,6 @@ jobs:
       - name: Build the Notely app
         run: ./scripts/buildprod.sh
 
-      - name: Upload binary artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: notely-binary
-          path: notely
-
-      - name: Download binary artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: notely-binary
-
-      - name: Make binary executable
-        run: chmod +x notely
-
       - id: auth
         uses: google-github-actions/auth@v2
         with:
@@ -45,6 +31,9 @@ jobs:
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
+      
+      - name: Use gcloud CLI
+        run: glcoud info
 
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
