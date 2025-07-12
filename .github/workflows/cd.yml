@@ -18,8 +18,45 @@ jobs:
         with:
           go-version: "1.23.0"
 
-      - name: Check Go version
+      - name: Run tests
         run: go test -cover ./...
 
       - name: Build the Notely app
         run: ./scripts/buildprod.sh
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: notely-binary
+          path: notely
+
+  docker:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    needs: deploy
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Download binary artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: notely-binary
+
+      - name: Make binary executable
+        run: chmod +x notely
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Build and push Docker image
+        run: gcloud builds submit --tag us-central1-docker.pkg.dev/notely-465718/notely-ar-repo/notely:latest .
